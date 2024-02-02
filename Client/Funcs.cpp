@@ -1,11 +1,8 @@
 #include "Funcs.h"
 
-void sendWhatTime(SOCKET& connSocket, sockaddr_in& server) {
-	// Send and receive data.
-
+void sendMessage(SOCKET& connSocket, sockaddr_in& server, char * message) {
 	int bytesSent = 0;
 	int bytesRecv = 0;
-	char sendBuff[255] = "What's the time?";
 	char recvBuff[255];
 
 	// Asks the server what's the currnet time.
@@ -14,7 +11,7 @@ void sendWhatTime(SOCKET& connSocket, sockaddr_in& server) {
 	// The fourth argument is an idicator specifying the way in which the call is made (0 for default).
 	// The two last arguments hold the details of the server to communicate with. 
 	// NOTE: the last argument should always be the actual size of the client's data-structure (i.e. sizeof(sockaddr)).
-	bytesSent = sendto(connSocket, sendBuff, (int)strlen(sendBuff), 0, (const sockaddr*)&server, sizeof(server));
+	bytesSent = sendto(connSocket, message, (int)strlen(message), 0, (const sockaddr*)&server, sizeof(server));
 	if (SOCKET_ERROR == bytesSent)
 	{
 		cout << "Time Client: Error at sendto(): " << WSAGetLastError() << endl;
@@ -22,7 +19,7 @@ void sendWhatTime(SOCKET& connSocket, sockaddr_in& server) {
 		WSACleanup();
 		return;
 	}
-	cout << "Time Client: Sent: " << bytesSent << "/" << strlen(sendBuff) << " bytes of \"" << sendBuff << "\" message.\n";
+	cout << "Time Client: Sent: " << bytesSent << "/" << strlen(message) << " bytes of \"" << message << "\" message.\n";
 
 	// Gets the server's answer using simple recieve (no need to hold the server's address).
 	bytesRecv = recv(connSocket, recvBuff, 255, 0);

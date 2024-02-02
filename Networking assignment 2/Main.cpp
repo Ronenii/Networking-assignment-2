@@ -1,10 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <iostream>
-using namespace std;
-#pragma comment(lib, "Ws2_32.lib")
-#include <winsock2.h>
-#include <string.h>
-#include <time.h>
+#include "Funcs.h"
 
 #define TIME_PORT	27015
 
@@ -116,15 +110,37 @@ void main()
 
 		recvBuff[bytesRecv] = '\0'; //add the null-terminating to make it a string
 		cout << "Time Server: Recieved: " << bytesRecv << " bytes of \"" << recvBuff << "\" message.\n";
-
+		
+		ClientInput input = parseInput(recvBuff);
 		// Answer client's request by the current time.
-
-		// Get the current time.
-		time_t timer;
-		time(&timer);
-		// Parse the current time to printable string.
-		strcpy(sendBuff, ctime(&timer));
-		sendBuff[strlen(sendBuff) - 1] = '\0'; //to remove the new-line from the created string
+		switch (input) {
+		case ClientInput::GET_TIME:
+			break;
+		case ClientInput::GET_TIME_WITHOUT_DATE:
+			break;
+		case ClientInput::GET_TIME_SINCE_EPOCH:
+			break;
+		case ClientInput::GET_CLIENT_TO_SERVER_DELAY_ESTIMATION:
+			break;
+		case ClientInput::MEASURE_RTT:
+			break;
+		case ClientInput::GET_TIME_WITHOUT_DATE_OR_SECONDS:
+			break;
+		case ClientInput::GET_YEAR:
+			break;
+		case ClientInput::GET_MONTH_AND_DAY:
+			break;
+		case ClientInput::GET_SECONDS_SINCE_BEGINNING_OF_MONTH:
+			break;
+		case ClientInput::GET_WEEK_OF_YEAR:
+			break;
+		case ClientInput::GET_DAYLIGHT_SAVINGS:
+			break;
+		case ClientInput::GET_TIME_WITHOUT_DATE_IN_CITY:
+			break;
+		case ClientInput::MEASURE_TIME_LAP:
+			break;
+		}
 
 		// Sends the answer to the client, using the client address gathered
 		// by recvfrom. 
@@ -145,3 +161,8 @@ void main()
 	closesocket(m_socket);
 	WSACleanup();
 }
+
+
+
+
+

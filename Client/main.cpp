@@ -1,23 +1,6 @@
 #include "Funcs.h"
 
 #define TIME_PORT	27015
-enum class MenuOption {
-	GET_TIME = 1,
-	GET_TIME_WITHOUT_DATE,
-	GET_TIME_SINCE_EPOCH,
-	GET_CLIENT_TO_SERVER_DELAY_ESTIMATION,
-	MEASURE_RTT,
-	GET_TIME_WITHOUT_DATE_OR_SECONDS,
-	GET_YEAR,
-	GET_MONTH_AND_DAY,
-	GET_SECONDS_SINCE_BEGINNING_OF_MONTH,
-	GET_WEEK_OF_YEAR,
-	GET_DAYLIGHT_SAVINGS,
-	GET_TIME_WITHOUT_DATE_IN_CITY,
-	MEASURE_TIME_LAP,
-	EXIT
-
-};
 
 void printMenu() {
 	cout << "1.  Get Time" << endl;
@@ -34,13 +17,6 @@ void printMenu() {
 	cout << "12. GetTimeWithoutDateInCity" << endl;
 	cout << "13. MeasureTimeLap" << endl;
 	cout << "0.  Exit " << endl;
-}
-
-MenuOption getInput() {
-	int input;
-	cin >> input;
-
-	return static_cast<MenuOption>(input);
 }
 
 void main()
@@ -76,44 +52,17 @@ void main()
 	server.sin_addr.s_addr = inet_addr("127.0.0.1");
 	server.sin_port = htons(TIME_PORT);
 
-
-	MenuOption input;
+	int input;
+	char reqeustValue[2];
 	while (runFlag) {
 		printMenu();
-		input = getInput();
-
-		switch (input) {
-		case MenuOption::GET_TIME:
-			sendWhatTime(connSocket, server);
-			break;
-		case MenuOption::GET_TIME_WITHOUT_DATE:
-			break;
-		case MenuOption::GET_TIME_SINCE_EPOCH:
-			break;
-		case MenuOption::GET_CLIENT_TO_SERVER_DELAY_ESTIMATION:
-			break;
-		case MenuOption::MEASURE_RTT:
-			break;
-		case MenuOption::GET_TIME_WITHOUT_DATE_OR_SECONDS:
-			break;
-		case MenuOption::GET_YEAR:
-			break;
-		case MenuOption::GET_MONTH_AND_DAY:
-			break;
-		case MenuOption::GET_SECONDS_SINCE_BEGINNING_OF_MONTH:
-			break;
-		case MenuOption::GET_WEEK_OF_YEAR:
-			break;
-		case MenuOption::GET_DAYLIGHT_SAVINGS:
-			break;
-		case MenuOption::GET_TIME_WITHOUT_DATE_IN_CITY:
-			break;
-		case MenuOption::MEASURE_TIME_LAP:
-			break;
-		case MenuOption::EXIT:
-			runFlag = false;
+		cin >> input;
+		itoa(input, reqeustValue, 10);
+		if (input == 0) {
 			break;
 		}
+
+		sendMessage(connSocket, server, reqeustValue);
 	}
 
 	// Closing connections and Winsock.

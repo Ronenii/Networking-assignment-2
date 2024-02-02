@@ -7,4 +7,4 @@ using namespace std;
 #include <winsock2.h> 
 #include <string.h>
 
-void sendWhatTime(SOCKET& connSocket, sockaddr_in& server);
+void sendMessage(SOCKET& connSocket, sockaddr_in& server, char* message);
