@@ -1,17 +1,53 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include <iostream>
-using namespace std;
-#pragma comment(lib, "Ws2_32.lib")
-#include <winsock2.h> 
-#include <string.h>
+#include "Funcs.h"
 
 #define TIME_PORT	27015
+enum class MenuOption {
+	GET_TIME = 1,
+	GET_TIME_WITHOUT_DATE,
+	GET_TIME_SINCE_EPOCH,
+	GET_CLIENT_TO_SERVER_DELAY_ESTIMATION,
+	MEASURE_RTT,
+	GET_TIME_WITHOUT_DATE_OR_SECONDS,
+	GET_YEAR,
+	GET_MONTH_AND_DAY,
+	GET_SECONDS_SINCE_BEGINNING_OF_MONTH,
+	GET_WEEK_OF_YEAR,
+	GET_DAYLIGHT_SAVINGS,
+	GET_TIME_WITHOUT_DATE_IN_CITY,
+	MEASURE_TIME_LAP,
+	EXIT
+
+};
+
+void printMenu() {
+	cout << "1.  Get Time" << endl;
+	cout << "2.  Get Time Without Date" << endl;
+	cout << "3.  Get Time Since Epoch" << endl;
+	cout << "4.  Get Client To Server Delay Estimation" << endl;
+	cout << "5.  MeasureRTT" << endl;
+	cout << "6.  Get Time Without Date Or Seconds" << endl;
+	cout << "7.  Get Year" << endl;
+	cout << "8.  Get Month And Day" << endl;
+	cout << "9.  Get Seconds Since Begining Of Month" << endl;
+	cout << "10. Get Week Of Year" << endl;
+	cout << "11. GetDaylightSavings" << endl;
+	cout << "12. GetTimeWithoutDateInCity" << endl;
+	cout << "13. MeasureTimeLap" << endl;
+	cout << "0.  Exit " << endl;
+}
+
+MenuOption getInput() {
+	int input;
+	cin >> input;
+
+	return static_cast<MenuOption>(input);
+}
 
 void main()
 {
+	bool runFlag = true;
 
 	// Initialize Winsock (Windows Sockets).
-
 	WSAData wsaData;
 	if (NO_ERROR != WSAStartup(MAKEWORD(2, 2), &wsaData))
 	{
@@ -40,41 +76,45 @@ void main()
 	server.sin_addr.s_addr = inet_addr("127.0.0.1");
 	server.sin_port = htons(TIME_PORT);
 
-	// Send and receive data.
 
-	int bytesSent = 0;
-	int bytesRecv = 0;
-	char sendBuff[255] = "What's the time?";
-	char recvBuff[255];
+	MenuOption input;
+	while (runFlag) {
+		printMenu();
+		input = getInput();
 
-	// Asks the server what's the currnet time.
-	// The send function sends data on a connected socket.
-	// The buffer to be sent and its size are needed.
-	// The fourth argument is an idicator specifying the way in which the call is made (0 for default).
-	// The two last arguments hold the details of the server to communicate with. 
-	// NOTE: the last argument should always be the actual size of the client's data-structure (i.e. sizeof(sockaddr)).
-	bytesSent = sendto(connSocket, sendBuff, (int)strlen(sendBuff), 0, (const sockaddr*)&server, sizeof(server));
-	if (SOCKET_ERROR == bytesSent)
-	{
-		cout << "Time Client: Error at sendto(): " << WSAGetLastError() << endl;
-		closesocket(connSocket);
-		WSACleanup();
-		return;
+		switch (input) {
+		case MenuOption::GET_TIME:
+			sendWhatTime(connSocket, server);
+			break;
+		case MenuOption::GET_TIME_WITHOUT_DATE:
+			break;
+		case MenuOption::GET_TIME_SINCE_EPOCH:
+			break;
+		case MenuOption::GET_CLIENT_TO_SERVER_DELAY_ESTIMATION:
+			break;
+		case MenuOption::MEASURE_RTT:
+			break;
+		case MenuOption::GET_TIME_WITHOUT_DATE_OR_SECONDS:
+			break;
+		case MenuOption::GET_YEAR:
+			break;
+		case MenuOption::GET_MONTH_AND_DAY:
+			break;
+		case MenuOption::GET_SECONDS_SINCE_BEGINNING_OF_MONTH:
+			break;
+		case MenuOption::GET_WEEK_OF_YEAR:
+			break;
+		case MenuOption::GET_DAYLIGHT_SAVINGS:
+			break;
+		case MenuOption::GET_TIME_WITHOUT_DATE_IN_CITY:
+			break;
+		case MenuOption::MEASURE_TIME_LAP:
+			break;
+		case MenuOption::EXIT:
+			runFlag = false;
+			break;
+		}
 	}
-	cout << "Time Client: Sent: " << bytesSent << "/" << strlen(sendBuff) << " bytes of \"" << sendBuff << "\" message.\n";
-
-	// Gets the server's answer using simple recieve (no need to hold the server's address).
-	bytesRecv = recv(connSocket, recvBuff, 255, 0);
-	if (SOCKET_ERROR == bytesRecv)
-	{
-		cout << "Time Client: Error at recv(): " << WSAGetLastError() << endl;
-		closesocket(connSocket);
-		WSACleanup();
-		return;
-	}
-
-	recvBuff[bytesRecv] = '\0'; //add the null-terminating to make it a string
-	cout << "Time Client: Recieved: " << bytesRecv << " bytes of \"" << recvBuff << "\" message.\n";
 
 	// Closing connections and Winsock.
 	cout << "Time Client: Closing Connection.\n";
