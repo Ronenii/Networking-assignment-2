@@ -1,6 +1,7 @@
 #pragma once
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #define MAX_INPUT_LENGTH 3
 #define DEFAULT_BUFFER_SIZE 255
 
@@ -12,7 +13,7 @@ using namespace std;
 #include <time.h>
 #include <sysinfoapi.h>
 
-enum class ClientInput {
+enum class MenuInput {
 	EXIT,
 	GET_TIME,
 	GET_TIME_WITHOUT_DATE,
@@ -39,8 +40,10 @@ void getClientToServerDelayEstimation(SOCKET& connSocket, sockaddr_in& server);
 
 void measureRTT(SOCKET& connSocket, sockaddr_in& server);
 
-ClientInput parseInput();
+MenuInput parseInput();
 
 void printMenu();
 
 void printCitiesMenu();
+
+void getTimeInCity(SOCKET& connSocket, sockaddr_in& server);

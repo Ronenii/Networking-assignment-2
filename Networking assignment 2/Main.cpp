@@ -112,49 +112,48 @@ void main()
 		recvBuff[bytesRecv] = '\0'; //add the null-terminating to make it a string
 		cout << "Time Server: Recieved: " << bytesRecv << " bytes of \"" << recvBuff << "\" message.\n";
 
-		ClientInput input = parseInput(recvBuff);
+		ClientInput * input = parseInput(recvBuff);
 		// Answer client's request by the current time.
-		switch (input) {
-		case ClientInput::GET_TIME:
+		switch (input->clientInput) {
+		case MenuInput::GET_TIME:
 			retMessage = getTime();
 			break;
-		case ClientInput::GET_TIME_WITHOUT_DATE:
+		case MenuInput::GET_TIME_WITHOUT_DATE:
 			retMessage = getTimeWithoutDate();
 			break;
-		case ClientInput::GET_TIME_SINCE_EPOCH:
+		case MenuInput::GET_TIME_SINCE_EPOCH:
 			retMessage = getTimeSinceEpoch();
 			break;
-		case ClientInput::GET_CLIENT_TO_SERVER_DELAY_ESTIMATION:
+		case MenuInput::GET_CLIENT_TO_SERVER_DELAY_ESTIMATION:
 			retMessage = getCurrentTicks();
 			break;
-		case ClientInput::MEASURE_RTT:
+		case MenuInput::MEASURE_RTT:
 			retMessage = emptyString();
 			break;
-		case ClientInput::GET_TIME_WITHOUT_DATE_OR_SECONDS:
+		case MenuInput::GET_TIME_WITHOUT_DATE_OR_SECONDS:
 			retMessage = getTimeWithoutDateOrSeconds();
 			break;
-		case ClientInput::GET_YEAR:
+		case MenuInput::GET_YEAR:
 			retMessage = getYear();
 			break;
-		case ClientInput::GET_MONTH_AND_DAY:
+		case MenuInput::GET_MONTH_AND_DAY:
 			retMessage = getMonthAndDay();
 			break;
-		case ClientInput::GET_SECONDS_SINCE_BEGINNING_OF_MONTH:
+		case MenuInput::GET_SECONDS_SINCE_BEGINNING_OF_MONTH:
 			retMessage = getSecondsSinceBeginningOfTheMonth();
 			break;
-		case ClientInput::GET_WEEK_OF_YEAR:
+		case MenuInput::GET_WEEK_OF_YEAR:
 			retMessage = getWeekOfYear();
 			break;
-		case ClientInput::GET_DAYLIGHT_SAVINGS:
+		case MenuInput::GET_DAYLIGHT_SAVINGS:
 			retMessage = getDaylightSavings();
 			break;
-		case ClientInput::GET_TIME_WITHOUT_DATE_IN_CITY:
-
-			
+		case MenuInput::GET_TIME_WITHOUT_DATE_IN_CITY:
+			retMessage = getTimeInCity(input->cityInput);
 			break;
-		case ClientInput::MEASURE_TIME_LAP:
+		case MenuInput::MEASURE_TIME_LAP:
 			break;
-		case ClientInput::EXIT:
+		case MenuInput::EXIT:
 			runFlag = false;
 			retMessage = emptyString();
 			break;
@@ -162,6 +161,7 @@ void main()
 			retMessage = invalidInputString();
 			break;
 		}
+		delete input;
 		// Sends the answer to the client, using the client address gathered
 	    // by recvfrom. 
 		bytesSent = sendto(m_socket, retMessage, strlen(retMessage) + 1, 0, (const sockaddr*)&client_addr, client_addr_len);

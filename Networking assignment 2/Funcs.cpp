@@ -19,7 +19,7 @@ char* getTimeWithoutDate() {
 
 	char* ret = new char[DEFAULT_BUFFER_SIZE];
 
-	strftime(ret, DEFAULT_BUFFER_SIZE, "%H:%M:%S", localtime(&timer));
+	strftime(ret, strlen(ret), "%H:%M:%S", localtime(&timer));
 
 	return ret;
 }
@@ -30,7 +30,7 @@ char* getTimeWithoutDateOrSeconds() {
 
 	char* ret = new char[DEFAULT_BUFFER_SIZE];
 
-	strftime(ret, DEFAULT_BUFFER_SIZE, "%H:%M", localtime(&timer));
+	strftime(ret,strlen(ret), "%H:%M", localtime(&timer));
 
 	return ret;
 }
@@ -101,7 +101,7 @@ char* getWeekOfYear() {
 
 	char* ret = new char[DEFAULT_BUFFER_SIZE];
 
-	strftime(ret, DEFAULT_BUFFER_SIZE, "%U", localtime(&timer));
+	strftime(ret, strlen(ret), "%U", localtime(&timer));
 
 	return ret;
 }
@@ -126,10 +126,57 @@ char* getDaylightSavings() {
 	return ret;
 }
 
-ClientInput parseInput(char* input) {
-	int intInput = atoi(input);
+void setTimeZone(const char* timeZone) {
+	// Set the time zone using _putenv_s
+	_putenv_s("TZ", timeZone);
+	_tzset();
+}
 
-	return static_cast<ClientInput>(intInput);
+char* getTimeInCity(CityInput city) {
+	const char* timeZone;
+	time_t currentTime;
+	time(&currentTime);
+
+	switch (city) {
+	case CityInput::DOHA:
+		timeZone = "Asia/Qatar";
+		break;
+	case CityInput::PRAGUE:
+		timeZone = "Europe/Prague";
+		break;
+	case CityInput::NEW_YORK:
+		timeZone = "America/New_York";
+		break;
+	case CityInput::BERLIN:
+		timeZone = "Europe/Berlin";
+		break;
+	default:
+		timeZone = "UTC";
+		break;
+	}
+
+	struct tm localTime = *localtime(&currentTime);
+	setTimeZone(timeZone);
+	localtime_r(&currentTime, &localTime);
+
+
+	char* ret = new char[DEFAULT_BUFFER_SIZE];
+
+	strftime(ret, strlen(ret), "%H:%M:%S", &localTime);
+
+	return ret;
+}
+
+ClientInput * parseInput(char* input) {
+	char * firstParam = strtok(input, " ");
+	char * secondParam = strtok(NULL, " ");
+	ClientInput * userInput = new ClientInput;
+	userInput->clientInput = static_cast<MenuInput>(atoi(firstParam));
+	if (secondParam != nullptr) {
+		userInput->cityInput = static_cast<CityInput>(atoi(secondParam));
+	}
+
+	return userInput;
 }
 
 char* emptyString() {

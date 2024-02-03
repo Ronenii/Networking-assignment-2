@@ -12,7 +12,7 @@ using namespace std;
 # define DEFAULT_BUFFER_SIZE 255
 # define BASE_10 10
 
-enum class ClientInput {
+enum class MenuInput {
 	EXIT,
 	GET_TIME,
 	GET_TIME_WITHOUT_DATE,
@@ -28,6 +28,20 @@ enum class ClientInput {
 	GET_TIME_WITHOUT_DATE_IN_CITY,
 	MEASURE_TIME_LAP,
 };
+
+enum class CityInput {
+	DOHA = 1,
+	PRAGUE,
+	NEW_YORK,
+	BERLIN
+};
+
+typedef struct clientInput {
+	MenuInput clientInput;
+	CityInput cityInput;
+
+}ClientInput;
+
 
 char * getTime();
 
@@ -49,7 +63,11 @@ char* getWeekOfYear();
 
 char* getDaylightSavings();
 
-ClientInput parseInput(char* input);
+void setTimeZone(const char* timeZone);
+
+char* getTimeInCity(CityInput city);
+
+ClientInput* parseInput(char* input);
 
 char* emptyString();
 

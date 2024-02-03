@@ -39,33 +39,33 @@ void main()
 	while (runFlag) {
 		printMenu();
 		cout << "==> " << flush;
-		ClientInput input = parseInput();
+		MenuInput input = parseInput();
 		int cityInput;
 		snprintf(reqeustValue, MAX_INPUT_LENGTH, "%d", static_cast<int>(input));
 
 		switch (input) {
-		case ClientInput::EXIT:
+		case MenuInput::EXIT:
 			runFlag = false;
 			break;
-		case ClientInput::GET_CLIENT_TO_SERVER_DELAY_ESTIMATION:
+		case MenuInput::GET_CLIENT_TO_SERVER_DELAY_ESTIMATION:
 			getClientToServerDelayEstimation(connSocket, server);
 			break;
-		case ClientInput::MEASURE_RTT:
+		case MenuInput::MEASURE_RTT:
 			measureRTT(connSocket, server);
 			break;
-		case ClientInput::GET_TIME_WITHOUT_DATE_IN_CITY:
+		case MenuInput::GET_TIME_WITHOUT_DATE_IN_CITY:
 			printCitiesMenu();
-			
+			getTimeInCity(connSocket, server);
 			break;
 		default:
 			sendMessageAndRecieveResult(connSocket, server, reqeustValue);
 			break;
 		}
-
-		// Closing connections and Winsock.
-		cout << "Time Client: Closing Connection.\n";
-		closesocket(connSocket);
-
-		system("pause");
 	}
+
+	// Closing connections and Winsock.
+	cout << "Time Client: Closing Connection.\n";
+	closesocket(connSocket);
+
+	system("pause");
 }

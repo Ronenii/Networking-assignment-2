@@ -12,8 +12,6 @@ void sendMessageAndRecieveResult(SOCKET& connSocket, sockaddr_in& server, char* 
 	// The two last arguments hold the details of the server to communicate with. 
 	// NOTE: the last argument should always be the actual size of the client's data-structure (i.e. sizeof(sockaddr)).
 	bytesSent = sendto(connSocket, message, (int)strlen(message), 0, (const sockaddr*)&server, sizeof(server));
-
-	cout << endl;
 	cout << "**************************************************************" << endl;
 	if (SOCKET_ERROR == bytesSent)
 	{
@@ -135,6 +133,7 @@ void getTimeInCity(SOCKET& connSocket, sockaddr_in& server) {
 	int input;
 	cout << "==> " << flush;
 	cin >> input;
+	cout << endl;
 
 	char* message = new char[DEFAULT_BUFFER_SIZE];
 
@@ -144,12 +143,13 @@ void getTimeInCity(SOCKET& connSocket, sockaddr_in& server) {
 	delete message;
 }
 
-ClientInput parseInput() {
+MenuInput parseInput() {
 	int intInput;
 
 	cin >> intInput;
+	cout << endl;
 
-	return static_cast<ClientInput>(intInput);
+	return static_cast<MenuInput>(intInput);
 }
 
 void printMenu() {
@@ -174,6 +174,6 @@ void printCitiesMenu() {
 	cout << "2. Prague" << endl;
 	cout << "3. New York" << endl;
 	cout << "4. Berlin" << endl;
-	cout << "5. Not listed" << endl;
+	cout << "0. Other" << endl;
 }
 
