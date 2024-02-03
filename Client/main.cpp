@@ -1,6 +1,8 @@
 #include "Funcs.h"
 
 #define TIME_PORT	27015
+#define GET_DELAY 4
+#define GET_RTT 5
 
 void printMenu() {
 	cout << "1.  Get Time" << endl;
@@ -63,7 +65,12 @@ void main()
 			break;
 		}
 
-		sendMessage(connSocket, server, reqeustValue);
+		if (input != GET_DELAY && input != GET_RTT) {
+			sendMessageAndRecieveResult(connSocket, server, reqeustValue);
+		}
+		else if (input == GET_DELAY) {
+			getClientToServerDelayEstimation(connSocket, server);
+		}
 	}
 
 	// Closing connections and Winsock.

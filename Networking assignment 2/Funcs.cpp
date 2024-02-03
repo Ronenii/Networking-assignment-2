@@ -36,6 +36,12 @@ char* getTimeSinceEpoch() {
     return ret;
 }
 
+char* getCurrentTicks() {
+	char* ret = new char[255];
+	itoa(GetTickCount(), ret, 10);
+	return ret;
+}
+
 ClientInput parseInput(char* input) {
 	int intInput = atoi(input);
 

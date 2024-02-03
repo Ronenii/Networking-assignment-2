@@ -8,4 +8,10 @@ using namespace std;
 #include <winsock2.h> 
 #include <string.h>
 
-void sendMessage(SOCKET& connSocket, sockaddr_in& server, char* message);
+void sendMessageAndRecieveResult(SOCKET& connSocket, sockaddr_in& server, char* message);
+
+void sendMessageNoOutput(SOCKET& connSocket, sockaddr_in& server, char* message);
+
+char * getResultNoOutput(SOCKET& connSocket);
+
+void getClientToServerDelayEstimation(SOCKET& connSocket, sockaddr_in& server);

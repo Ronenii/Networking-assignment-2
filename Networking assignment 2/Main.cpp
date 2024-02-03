@@ -124,6 +124,7 @@ void main()
 			retMessage = getTimeSinceEpoch();
 			break;
 		case ClientInput::GET_CLIENT_TO_SERVER_DELAY_ESTIMATION:
+			retMessage = getCurrentTicks();
 			break;
 		case ClientInput::MEASURE_RTT:
 			break;

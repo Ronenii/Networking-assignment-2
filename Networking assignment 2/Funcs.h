@@ -7,6 +7,7 @@ using namespace std;
 #include <winsock2.h>
 #include <string.h>
 #include <time.h>
+#include <sysinfoapi.h>
 
 enum class ClientInput {
 	GET_TIME = 1,
@@ -31,5 +32,7 @@ char * getTime();
 char* getTimeWithoutDate();
 
 char* getTimeSinceEpoch();
+
+char* getCurrentTicks();
 
 ClientInput parseInput(char* input);
