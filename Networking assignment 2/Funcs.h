@@ -10,7 +10,8 @@ using namespace std;
 #include <sysinfoapi.h>
 
 enum class ClientInput {
-	GET_TIME = 1,
+	EXIT,
+	GET_TIME,
 	GET_TIME_WITHOUT_DATE,
 	GET_TIME_SINCE_EPOCH,
 	GET_CLIENT_TO_SERVER_DELAY_ESTIMATION,
@@ -23,8 +24,6 @@ enum class ClientInput {
 	GET_DAYLIGHT_SAVINGS,
 	GET_TIME_WITHOUT_DATE_IN_CITY,
 	MEASURE_TIME_LAP,
-	EXIT
-
 };
 
 char * getTime();

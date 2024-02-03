@@ -62,7 +62,7 @@ void main()
 		cin >> input;
 		snprintf(reqeustValue, MAX_INPUT_LENGTH, "%d", input);
 		if (input == 0) {
-			break;
+			runFlag = false;
 		}
 
 		if (input != GET_DELAY && input != GET_RTT) {
@@ -70,6 +70,10 @@ void main()
 		}
 		else if (input == GET_DELAY) {
 			getClientToServerDelayEstimation(connSocket, server);
+		}
+		else
+		{
+			measureRTT(connSocket, server);
 		}
 	}
 

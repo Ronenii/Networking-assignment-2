@@ -104,6 +104,24 @@ void getClientToServerDelayEstimation(SOCKET& connSocket, sockaddr_in& server) {
 	}
 
 	cout << "**************************************************************" << endl;
-	cout << "Client to server delay estimation: " << ((float)(sumOfDifferences / 99) / 10000.0f) << "ms" << endl;
+	cout << "Client to server delay estimation: " << (((float)sumOfDifferences / 99.0f) / 10000.0f) << "ms" << endl;
+	cout << "**************************************************************" << endl << endl;
+}
+
+void measureRTT(SOCKET& connSocket, sockaddr_in& server) {
+	int ticksBeforeSending;
+	time_t ticksAfterReceiving;
+	int sumOfRTTs = 0;
+
+	for (int i = 0; i < 100; i++) {
+		ticksBeforeSending = GetTickCount();
+		sendMessageNoOutput(connSocket, server, "5");
+		getResultNoOutput(connSocket);
+		ticksAfterReceiving = GetTickCount();
+		sumOfRTTs += ticksAfterReceiving - ticksBeforeSending;
+	}
+	
+	cout << "**************************************************************" << endl;
+	cout << "Client to server RTT Measurement: " << (((float)sumOfRTTs / 100.0f) / 10000.0f) << "ms" << endl;
 	cout << "**************************************************************" << endl << endl;
 }

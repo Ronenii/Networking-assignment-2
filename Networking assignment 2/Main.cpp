@@ -4,6 +4,7 @@
 
 void main()
 {
+	bool runFlag = true;
 	// Initialize Winsock (Windows Sockets).
 
 	// Create a WSADATA object called wsaData.
@@ -85,7 +86,7 @@ void main()
 	int client_addr_len = sizeof(client_addr);
 	int bytesSent = 0;
 	int bytesRecv = 0;
-	const char * retMessage = NULL;
+	const char* retMessage = NULL;
 	char recvBuff[255];
 
 	// Get client's requests and answer them.
@@ -97,7 +98,7 @@ void main()
 	// NOTE: the last argument should always be the actual size of the client's data-structure (i.e. sizeof(sockaddr)).
 	cout << "Time Server: Wait for clients' requests.\n";
 
-	while (true)
+	while (runFlag)
 	{
 		bytesRecv = recvfrom(m_socket, recvBuff, 255, 0, &client_addr, &client_addr_len);
 		if (SOCKET_ERROR == bytesRecv)
@@ -110,7 +111,7 @@ void main()
 
 		recvBuff[bytesRecv] = '\0'; //add the null-terminating to make it a string
 		cout << "Time Server: Recieved: " << bytesRecv << " bytes of \"" << recvBuff << "\" message.\n";
-		
+
 		ClientInput input = parseInput(recvBuff);
 		// Answer client's request by the current time.
 		switch (input) {
@@ -127,6 +128,7 @@ void main()
 			retMessage = getCurrentTicks();
 			break;
 		case ClientInput::MEASURE_RTT:
+			retMessage = "";
 			break;
 		case ClientInput::GET_TIME_WITHOUT_DATE_OR_SECONDS:
 			break;
@@ -144,13 +146,16 @@ void main()
 			break;
 		case ClientInput::MEASURE_TIME_LAP:
 			break;
+		case ClientInput::EXIT:
+			runFlag = false;
+			retMessage = "";
+			break;
 		default:
 			retMessage = "Invalid input";
 			break;
 		}
-
 		// Sends the answer to the client, using the client address gathered
-		// by recvfrom. 
+	    // by recvfrom. 
 		bytesSent = sendto(m_socket, retMessage, strlen(retMessage) + 1, 0, (const sockaddr*)&client_addr, client_addr_len);
 		if (SOCKET_ERROR == bytesSent)
 		{
