@@ -106,6 +106,26 @@ char* getWeekOfYear() {
 	return ret;
 }
 
+char* getDaylightSavings() {
+	time_t timer;
+	time(&timer);
+	struct tm* tm_info = localtime(&timer);
+
+	char * ret = new char[DEFAULT_BUFFER_SIZE];
+
+	if (tm_info->tm_isdst > 0) {
+		strcpy(ret,"Daylight Saving Time is in effect.\n");
+	}
+	else if (tm_info->tm_isdst == 0) {
+		strcpy(ret,"Daylight Saving Time is not in effect.\n");
+	}
+	else {
+		strcpy(ret,"Daylight Saving Time information is not available.\n");
+	}
+
+	return ret;
+}
+
 ClientInput parseInput(char* input) {
 	int intInput = atoi(input);
 

@@ -146,8 +146,11 @@ void main()
 			retMessage = getWeekOfYear();
 			break;
 		case ClientInput::GET_DAYLIGHT_SAVINGS:
+			retMessage = getDaylightSavings();
 			break;
 		case ClientInput::GET_TIME_WITHOUT_DATE_IN_CITY:
+
+			
 			break;
 		case ClientInput::MEASURE_TIME_LAP:
 			break;
@@ -179,8 +182,3 @@ void main()
 	closesocket(m_socket);
 	WSACleanup();
 }
-
-
-
-
-

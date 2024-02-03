@@ -47,6 +47,8 @@ char* getSecondsSinceBeginningOfTheMonth();
 
 char* getWeekOfYear();
 
+char* getDaylightSavings();
+
 ClientInput parseInput(char* input);
 
 char* emptyString();

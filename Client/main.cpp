@@ -1,25 +1,6 @@
 #include "Funcs.h"
 
 #define TIME_PORT	27015
-#define GET_DELAY 4
-#define GET_RTT 5
-
-void printMenu() {
-	cout << "1.  Get time" << endl;
-	cout << "2.  Get time without date" << endl;
-	cout << "3.  Get time since epoch" << endl;
-	cout << "4.  Get client to server delay estimation" << endl;
-	cout << "5.  Measure RTT" << endl;
-	cout << "6.  Get time without date or seconds" << endl;
-	cout << "7.  Get year" << endl;
-	cout << "8.  Get month and day" << endl;
-	cout << "9.  Get seconds since begining of month" << endl;
-	cout << "10. Get week of year" << endl;
-	cout << "11. Get day light savings" << endl;
-	cout << "12. Get time without date in city" << endl;
-	cout << "13. Measure time lap" << endl;
-	cout << "0.  Exit " << endl;
-}
 
 void main()
 {
@@ -54,32 +35,37 @@ void main()
 	server.sin_addr.s_addr = inet_addr("127.0.0.1");
 	server.sin_port = htons(TIME_PORT);
 
-	int input;
 	char reqeustValue[MAX_INPUT_LENGTH];
 	while (runFlag) {
 		printMenu();
 		cout << "==> " << flush;
-		cin >> input;
-		snprintf(reqeustValue, MAX_INPUT_LENGTH, "%d", input);
-		if (input == 0) {
+		ClientInput input = parseInput();
+		int cityInput;
+		snprintf(reqeustValue, MAX_INPUT_LENGTH, "%d", static_cast<int>(input));
+
+		switch (input) {
+		case ClientInput::EXIT:
 			runFlag = false;
-		}
-
-		if (input != GET_DELAY && input != GET_RTT) {
-			sendMessageAndRecieveResult(connSocket, server, reqeustValue);
-		}
-		else if (input == GET_DELAY) {
+			break;
+		case ClientInput::GET_CLIENT_TO_SERVER_DELAY_ESTIMATION:
 			getClientToServerDelayEstimation(connSocket, server);
-		}
-		else
-		{
+			break;
+		case ClientInput::MEASURE_RTT:
 			measureRTT(connSocket, server);
+			break;
+		case ClientInput::GET_TIME_WITHOUT_DATE_IN_CITY:
+			printCitiesMenu();
+			
+			break;
+		default:
+			sendMessageAndRecieveResult(connSocket, server, reqeustValue);
+			break;
 		}
+
+		// Closing connections and Winsock.
+		cout << "Time Client: Closing Connection.\n";
+		closesocket(connSocket);
+
+		system("pause");
 	}
-
-	// Closing connections and Winsock.
-	cout << "Time Client: Closing Connection.\n";
-	closesocket(connSocket);
-
-	system("pause");
 }
