@@ -41,8 +41,7 @@ char* getYear() {
 	time_t timer;
 	time(&timer);
 
-	const size_t bufferSize = 5; 
-	char* ret = new char[bufferSize];
+	char* ret = new char[5];
 	int year = localtime(&timer)->tm_year;
 	itoa(year + 1900, ret, 10);
 
@@ -58,6 +57,19 @@ char* getTimeSinceEpoch() {
 	itoa(timer, ret, 10);
 
     return ret;
+}
+
+char* getMonthAndDay() {
+	time_t timer;
+	time(&timer);
+
+	char* ret = new char[6];
+	int day = localtime(&timer)->tm_mday;
+	int month = localtime(&timer)->tm_mon + 1;
+	
+	sprintf(ret, "%d/%d", day, month);
+
+	return ret;
 }
 
 char* getCurrentTicks() {

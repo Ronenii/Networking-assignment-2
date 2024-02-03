@@ -5,19 +5,19 @@
 #define GET_RTT 5
 
 void printMenu() {
-	cout << "1.  Get Time" << endl;
-	cout << "2.  Get Time Without Date" << endl;
-	cout << "3.  Get Time Since Epoch" << endl;
-	cout << "4.  Get Client To Server Delay Estimation" << endl;
-	cout << "5.  MeasureRTT" << endl;
-	cout << "6.  Get Time Without Date Or Seconds" << endl;
-	cout << "7.  Get Year" << endl;
-	cout << "8.  Get Month And Day" << endl;
-	cout << "9.  Get Seconds Since Begining Of Month" << endl;
-	cout << "10. Get Week Of Year" << endl;
-	cout << "11. GetDaylightSavings" << endl;
-	cout << "12. GetTimeWithoutDateInCity" << endl;
-	cout << "13. MeasureTimeLap" << endl;
+	cout << "1.  Get time" << endl;
+	cout << "2.  Get time without date" << endl;
+	cout << "3.  Get time since epoch" << endl;
+	cout << "4.  Get client to server delay estimation" << endl;
+	cout << "5.  Measure RTT" << endl;
+	cout << "6.  Get time without date or seconds" << endl;
+	cout << "7.  Get year" << endl;
+	cout << "8.  Get month and day" << endl;
+	cout << "9.  Get seconds since begining of month" << endl;
+	cout << "10. Get week of year" << endl;
+	cout << "11. Get day light savings" << endl;
+	cout << "12. Get time without date in city" << endl;
+	cout << "13. Measure time lap" << endl;
 	cout << "0.  Exit " << endl;
 }
 

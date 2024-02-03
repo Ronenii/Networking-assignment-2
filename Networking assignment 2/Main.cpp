@@ -137,6 +137,7 @@ void main()
 			retMessage = getYear();
 			break;
 		case ClientInput::GET_MONTH_AND_DAY:
+			retMessage = getMonthAndDay();
 			break;
 		case ClientInput::GET_SECONDS_SINCE_BEGINNING_OF_MONTH:
 			break;

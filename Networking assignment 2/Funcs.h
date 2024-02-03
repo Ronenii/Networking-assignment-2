@@ -36,6 +36,8 @@ char* getYear();
 
 char* getTimeSinceEpoch();
 
+char* getMonthAndDay();
+
 char* getCurrentTicks();
 
 ClientInput parseInput(char* input);
