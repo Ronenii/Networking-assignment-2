@@ -1,5 +1,5 @@
 #pragma once
-
+#define _CRT_NONSTDC_NO_DEPRECATE
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 using namespace std;
@@ -26,6 +26,10 @@ enum class ClientInput {
 
 };
 
-char* getTime();
+char * getTime();
+
+char* getTimeWithoutDate();
+
+char* getTimeSinceEpoch();
 
 ClientInput parseInput(char* input);

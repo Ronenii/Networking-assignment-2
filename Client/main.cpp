@@ -53,11 +53,12 @@ void main()
 	server.sin_port = htons(TIME_PORT);
 
 	int input;
-	char reqeustValue[2];
+	char reqeustValue[MAX_INPUT_LENGTH];
 	while (runFlag) {
 		printMenu();
+		cout << "==> " << flush;
 		cin >> input;
-		itoa(input, reqeustValue, 10);
+		snprintf(reqeustValue, MAX_INPUT_LENGTH, "%d", input);
 		if (input == 0) {
 			break;
 		}

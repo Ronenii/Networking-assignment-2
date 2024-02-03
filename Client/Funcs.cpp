@@ -12,6 +12,9 @@ void sendMessage(SOCKET& connSocket, sockaddr_in& server, char * message) {
 	// The two last arguments hold the details of the server to communicate with. 
 	// NOTE: the last argument should always be the actual size of the client's data-structure (i.e. sizeof(sockaddr)).
 	bytesSent = sendto(connSocket, message, (int)strlen(message), 0, (const sockaddr*)&server, sizeof(server));
+
+	cout << endl;
+	cout << "**************************************************************" << endl;
 	if (SOCKET_ERROR == bytesSent)
 	{
 		cout << "Time Client: Error at sendto(): " << WSAGetLastError() << endl;
@@ -33,4 +36,5 @@ void sendMessage(SOCKET& connSocket, sockaddr_in& server, char * message) {
 
 	recvBuff[bytesRecv] = '\0'; //add the null-terminating to make it a string
 	cout << "Time Client: Recieved: " << bytesRecv << " bytes of \"" << recvBuff << "\" message.\n";
+	cout << "**************************************************************" << endl << endl;
 }
