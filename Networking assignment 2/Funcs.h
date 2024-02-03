@@ -9,6 +9,9 @@ using namespace std;
 #include <time.h>
 #include <sysinfoapi.h>
 
+# define DEFAULT_BUFFER_SIZE 255
+# define BASE_10 10
+
 enum class ClientInput {
 	EXIT,
 	GET_TIME,
@@ -40,4 +43,12 @@ char* getMonthAndDay();
 
 char* getCurrentTicks();
 
+char* getSecondsSinceBeginningOfTheMonth();
+
+char* getWeekOfYear();
+
 ClientInput parseInput(char* input);
+
+char* emptyString();
+
+char* invalidInputString();

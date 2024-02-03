@@ -4,7 +4,7 @@ char* getTime() {
 	// Get the current time.
 	time_t timer;
 	time(&timer);
-	char* ret = new char[255];
+	char* ret = new char[DEFAULT_BUFFER_SIZE];
 	strcpy(ret, ctime(&timer));
 
 	// Remove the new-line from the created string.
@@ -17,10 +17,9 @@ char* getTimeWithoutDate() {
 	time_t timer;
 	time(&timer);
 
-	const size_t bufferSize = 9; // HH:MM:SS\0
-	char* ret = new char[bufferSize];
+	char* ret = new char[DEFAULT_BUFFER_SIZE];
 
-	strftime(ret, bufferSize, "%H:%M:%S", localtime(&timer));
+	strftime(ret, DEFAULT_BUFFER_SIZE, "%H:%M:%S", localtime(&timer));
 
 	return ret;
 }
@@ -29,10 +28,9 @@ char* getTimeWithoutDateOrSeconds() {
 	time_t timer;
 	time(&timer);
 
-	const size_t bufferSize = 6; // HH:MM:SS\0
-	char* ret = new char[bufferSize];
+	char* ret = new char[DEFAULT_BUFFER_SIZE];
 
-	strftime(ret, bufferSize, "%H:%M", localtime(&timer));
+	strftime(ret, DEFAULT_BUFFER_SIZE, "%H:%M", localtime(&timer));
 
 	return ret;
 }
@@ -41,9 +39,9 @@ char* getYear() {
 	time_t timer;
 	time(&timer);
 
-	char* ret = new char[5];
+	char* ret = new char[DEFAULT_BUFFER_SIZE];
 	int year = localtime(&timer)->tm_year;
-	itoa(year + 1900, ret, 10);
+	itoa(year + 1900, ret, BASE_10);
 
 	return ret;
 }
@@ -52,9 +50,9 @@ char* getTimeSinceEpoch() {
     time_t timer;
     time(&timer);
 
-	char* ret = new char[255];
+	char* ret = new char[DEFAULT_BUFFER_SIZE];
 
-	itoa(timer, ret, 10);
+	itoa(timer, ret, BASE_10);
 
     return ret;
 }
@@ -63,7 +61,7 @@ char* getMonthAndDay() {
 	time_t timer;
 	time(&timer);
 
-	char* ret = new char[6];
+	char* ret = new char[DEFAULT_BUFFER_SIZE];
 	int day = localtime(&timer)->tm_mday;
 	int month = localtime(&timer)->tm_mon + 1;
 	
@@ -73,8 +71,38 @@ char* getMonthAndDay() {
 }
 
 char* getCurrentTicks() {
-	char* ret = new char[255];
-	itoa(GetTickCount(), ret, 10);
+	char* ret = new char[DEFAULT_BUFFER_SIZE];
+	itoa(GetTickCount(), ret, BASE_10);
+	return ret;
+}
+
+char* getSecondsSinceBeginningOfTheMonth() {
+	char* ret = new char[DEFAULT_BUFFER_SIZE];
+	
+	time_t now;
+	time(&now);
+
+	struct tm beg_month;
+	beg_month = *localtime(&now);
+	beg_month.tm_hour = 0;
+	beg_month.tm_min = 0;
+	beg_month.tm_sec = 0;
+	beg_month.tm_mday = 1;
+
+	double seconds = difftime(now, mktime(&beg_month));
+
+	itoa((int)seconds, ret, BASE_10);
+	return ret;
+}
+
+char* getWeekOfYear() {
+	time_t timer;
+	time(&timer);
+
+	char* ret = new char[DEFAULT_BUFFER_SIZE];
+
+	strftime(ret, DEFAULT_BUFFER_SIZE, "%U", localtime(&timer));
+
 	return ret;
 }
 
@@ -82,4 +110,16 @@ ClientInput parseInput(char* input) {
 	int intInput = atoi(input);
 
 	return static_cast<ClientInput>(intInput);
+}
+
+char* emptyString() {
+	char* ret = new char[1];
+	ret[0] = '\0';
+	return ret;
+}
+
+char* invalidInputString() {
+	char* ret = new char[DEFAULT_BUFFER_SIZE];
+	strcpy(ret, "Invalid input");
+	return ret;
 }

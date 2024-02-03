@@ -128,7 +128,7 @@ void main()
 			retMessage = getCurrentTicks();
 			break;
 		case ClientInput::MEASURE_RTT:
-			retMessage = "";
+			retMessage = emptyString();
 			break;
 		case ClientInput::GET_TIME_WITHOUT_DATE_OR_SECONDS:
 			retMessage = getTimeWithoutDateOrSeconds();
@@ -140,8 +140,10 @@ void main()
 			retMessage = getMonthAndDay();
 			break;
 		case ClientInput::GET_SECONDS_SINCE_BEGINNING_OF_MONTH:
+			retMessage = getSecondsSinceBeginningOfTheMonth();
 			break;
 		case ClientInput::GET_WEEK_OF_YEAR:
+			retMessage = getWeekOfYear();
 			break;
 		case ClientInput::GET_DAYLIGHT_SAVINGS:
 			break;
@@ -151,10 +153,10 @@ void main()
 			break;
 		case ClientInput::EXIT:
 			runFlag = false;
-			retMessage = "";
+			retMessage = emptyString();
 			break;
 		default:
-			retMessage = "Invalid input";
+			retMessage = invalidInputString();
 			break;
 		}
 		// Sends the answer to the client, using the client address gathered
@@ -169,6 +171,7 @@ void main()
 		}
 
 		cout << "Time Server: Sent: " << bytesSent << "\\" << strlen(retMessage) << " bytes of \"" << retMessage << "\" message.\n";
+		delete retMessage;
 	}
 
 	// Closing connections and Winsock.
