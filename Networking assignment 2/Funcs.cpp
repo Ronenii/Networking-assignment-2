@@ -37,6 +37,18 @@ char* getTimeWithoutDateOrSeconds() {
 	return ret;
 }
 
+char* getYear() {
+	time_t timer;
+	time(&timer);
+
+	const size_t bufferSize = 5; 
+	char* ret = new char[bufferSize];
+	int year = localtime(&timer)->tm_year;
+	itoa(year + 1900, ret, 10);
+
+	return ret;
+}
+
 char* getTimeSinceEpoch() {
     time_t timer;
     time(&timer);

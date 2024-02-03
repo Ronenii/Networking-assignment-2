@@ -134,6 +134,7 @@ void main()
 			retMessage = getTimeWithoutDateOrSeconds();
 			break;
 		case ClientInput::GET_YEAR:
+			retMessage = getYear();
 			break;
 		case ClientInput::GET_MONTH_AND_DAY:
 			break;
