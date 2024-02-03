@@ -25,6 +25,18 @@ char* getTimeWithoutDate() {
 	return ret;
 }
 
+char* getTimeWithoutDateOrSeconds() {
+	time_t timer;
+	time(&timer);
+
+	const size_t bufferSize = 6; // HH:MM:SS\0
+	char* ret = new char[bufferSize];
+
+	strftime(ret, bufferSize, "%H:%M", localtime(&timer));
+
+	return ret;
+}
+
 char* getTimeSinceEpoch() {
     time_t timer;
     time(&timer);

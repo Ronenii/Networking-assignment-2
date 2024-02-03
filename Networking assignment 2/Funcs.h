@@ -30,6 +30,8 @@ char * getTime();
 
 char* getTimeWithoutDate();
 
+char* getTimeWithoutDateOrSeconds();
+
 char* getTimeSinceEpoch();
 
 char* getCurrentTicks();
