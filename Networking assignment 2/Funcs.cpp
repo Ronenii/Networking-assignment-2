@@ -1,188 +1,174 @@
 #include "Funcs.h"
 
-char* getTime() {
-	// Get the current time.
-	time_t timer;
-	time(&timer);
-	char* ret = new char[DEFAULT_BUFFER_SIZE];
-	strcpy(ret, ctime(&timer));
+string getTime() {
+    // Get the current time.
+    time_t timer;
+    time(&timer);
+    string ret = ctime(&timer);
 
-	// Remove the new-line from the created string.
-	ret[strlen(ret) - 1] = '\0';
+    // Remove the new-line from the created string.
+    ret.pop_back();
 
-	return ret;
+    return ret;
 }
 
-char* getTimeWithoutDate() {
-	time_t timer;
-	time(&timer);
+string getTimeWithoutDate() {
+    time_t timer;
+    time(&timer);
 
-	char* ret = new char[DEFAULT_BUFFER_SIZE];
+    char buffer[DEFAULT_BUFFER_SIZE];
+    strftime(buffer, DEFAULT_BUFFER_SIZE, "%H:%M:%S", localtime(&timer));
 
-	strftime(ret, strlen(ret), "%H:%M:%S", localtime(&timer));
-
-	return ret;
+    return string(buffer);
 }
 
-char* getTimeWithoutDateOrSeconds() {
-	time_t timer;
-	time(&timer);
+string getTimeWithoutDateOrSeconds() {
+    time_t timer;
+    time(&timer);
 
-	char* ret = new char[DEFAULT_BUFFER_SIZE];
+    char buffer[DEFAULT_BUFFER_SIZE];
+    strftime(buffer, DEFAULT_BUFFER_SIZE, "%H:%M", localtime(&timer));
 
-	strftime(ret, strlen(ret), "%H:%M", localtime(&timer));
-
-	return ret;
+    return string(buffer);
 }
 
-char* getYear() {
-	time_t timer;
-	time(&timer);
+string getYear() {
+    time_t timer;
+    time(&timer);
 
-	char* ret = new char[DEFAULT_BUFFER_SIZE];
-	int year = localtime(&timer)->tm_year;
-	itoa(year + 1900, ret, BASE_10);
+    char buffer[DEFAULT_BUFFER_SIZE];
+    int year = localtime(&timer)->tm_year;
+    sprintf(buffer, "%d", year + 1900);
 
-	return ret;
+    return string(buffer);
 }
 
-char* getTimeSinceEpoch() {
-	time_t timer;
-	time(&timer);
+string getTimeSinceEpoch() {
+    time_t timer;
+    time(&timer);
 
-	char* ret = new char[DEFAULT_BUFFER_SIZE];
+    char buffer[DEFAULT_BUFFER_SIZE];
+    sprintf(buffer, "%ld", timer);
 
-	itoa(timer, ret, BASE_10);
-
-	return ret;
+    return string(buffer);
 }
 
-char* getMonthAndDay() {
-	time_t timer;
-	time(&timer);
+string getMonthAndDay() {
+    time_t timer;
+    time(&timer);
 
-	char* ret = new char[DEFAULT_BUFFER_SIZE];
-	int day = localtime(&timer)->tm_mday;
-	int month = localtime(&timer)->tm_mon + 1;
+    char buffer[DEFAULT_BUFFER_SIZE];
+    int day = localtime(&timer)->tm_mday;
+    int month = localtime(&timer)->tm_mon + 1;
 
-	sprintf(ret, "%d/%d", day, month);
+    sprintf(buffer, "%d/%d", day, month);
 
-	return ret;
+    return string(buffer);
 }
 
-char* getCurrentTicks() {
-	char* ret = new char[DEFAULT_BUFFER_SIZE];
-	itoa(GetTickCount(), ret, BASE_10);
-	return ret;
+string getCurrentTicks() {
+    char buffer[DEFAULT_BUFFER_SIZE];
+    sprintf(buffer, "%ld", GetTickCount());
+    return string(buffer);
 }
 
-char* getSecondsSinceBeginningOfTheMonth() {
-	char* ret = new char[DEFAULT_BUFFER_SIZE];
+string getSecondsSinceBeginningOfTheMonth() {
+    char buffer[DEFAULT_BUFFER_SIZE];
 
-	time_t now;
-	time(&now);
+    time_t now;
+    time(&now);
 
-	struct tm beg_month;
-	beg_month = *localtime(&now);
-	beg_month.tm_hour = 0;
-	beg_month.tm_min = 0;
-	beg_month.tm_sec = 0;
-	beg_month.tm_mday = 1;
+    struct tm beg_month;
+    beg_month = *localtime(&now);
+    beg_month.tm_hour = 0;
+    beg_month.tm_min = 0;
+    beg_month.tm_sec = 0;
+    beg_month.tm_mday = 1;
 
-	double seconds = difftime(now, mktime(&beg_month));
+    double seconds = difftime(now, mktime(&beg_month));
 
-	itoa((int)seconds, ret, BASE_10);
-	return ret;
+    sprintf(buffer, "%d", (int)seconds);
+
+    return string(buffer);
 }
 
-char* getWeekOfYear() {
-	time_t timer;
-	time(&timer);
+string getWeekOfYear() {
+    time_t timer;
+    time(&timer);
 
-	char* ret = new char[DEFAULT_BUFFER_SIZE];
+    char buffer[DEFAULT_BUFFER_SIZE];
+    strftime(buffer, DEFAULT_BUFFER_SIZE, "%U", localtime(&timer));
 
-	strftime(ret, strlen(ret), "%U", localtime(&timer));
-
-	return ret;
+    return string(buffer);
 }
 
-char* getDaylightSavings() {
-	time_t timer;
-	time(&timer);
-	struct tm* tm_info = localtime(&timer);
+string getDaylightSavings() {
+    time_t timer;
+    time(&timer);
+    struct tm* tm_info = localtime(&timer);
 
-	char* ret = new char[DEFAULT_BUFFER_SIZE];
+    string ret;
 
-	if (tm_info->tm_isdst > 0) {
-		strcpy(ret, "Daylight Saving Time is in effect.\n");
-	}
-	else if (tm_info->tm_isdst == 0) {
-		strcpy(ret, "Daylight Saving Time is not in effect.\n");
-	}
-	else {
-		strcpy(ret, "Daylight Saving Time information is not available.\n");
-	}
+    if (tm_info->tm_isdst > 0) {
+        ret = "Daylight Saving Time is in effect.";
+    }
+    else if (tm_info->tm_isdst == 0) {
+        ret = "Daylight Saving Time is not in effect.";
+    }
+    else {
+        ret = "Daylight Saving Time information is not available.";
+    }
 
-	return ret;
+    return ret;
 }
 
 void setTimeZone(const char* timeZone) {
-	// Set the time zone using _putenv_s
-	_putenv_s("TZ", timeZone);
-	_tzset();
+    // Set the time zone using _putenv_s
+    _putenv_s("TZ", timeZone);
+    _tzset();
 }
 
-char* getTimeInCity(CityInput city) {
-	time_t utcTime;
-	time(&utcTime);
+string getTimeInCity(CityInput city) {
+    time_t utcTime;
+    time(&utcTime);
 
-	const int secondsInHour = 3600;
-	int hourOffset = 0;
+    const int secondsInHour = 3600;
+    int hourOffset = 0;
 
-	switch (city) {
-	case CityInput::DOHA:
-		hourOffset = 3;
-		break;
-	case CityInput::PRAGUE:
-		hourOffset = 1;
-		break;
-	case CityInput::NEW_YORK:
-		hourOffset = -5;
-		break;
-	case CityInput::BERLIN:
-		hourOffset = 1;
-		break;
-	}
+    switch (city) {
+    case CityInput::DOHA:
+        hourOffset = 3;
+        break;
+    case CityInput::PRAGUE:
+        hourOffset = 1;
+        break;
+    case CityInput::NEW_YORK:
+        hourOffset = -5;
+        break;
+    case CityInput::BERLIN:
+        hourOffset = 1;
+        break;
+    }
 
-	utcTime += hourOffset * secondsInHour;
-	struct tm* timeInfo = gmtime(&utcTime);
+    utcTime += hourOffset * secondsInHour;
+    struct tm* timeInfo = gmtime(&utcTime);
 
-	char* ret = new char[DEFAULT_BUFFER_SIZE];
-	strftime(ret, DEFAULT_BUFFER_SIZE, "%H:%M:%S", timeInfo);
+    char buffer[DEFAULT_BUFFER_SIZE];
+    strftime(buffer, DEFAULT_BUFFER_SIZE, "%H:%M:%S", timeInfo);
 
-	return ret; // Return formatted time string
+    return string(buffer);
 }
 
-ClientInput* parseInput(char* input) {
-	char* firstParam = strtok(input, " ");
-	char* secondParam = strtok(NULL, " ");
-	ClientInput* userInput = new ClientInput;
-	userInput->clientInput = static_cast<MenuInput>(atoi(firstParam));
-	if (secondParam != nullptr) {
-		userInput->cityInput = static_cast<CityInput>(atoi(secondParam));
-	}
+ClientInput* parseInput(string input) {
+    size_t spacePos = input.find(' ');
+    string firstParam = input.substr(0, spacePos);
+    string secondParam = (spacePos != string::npos) ? input.substr(spacePos + 1) : "";
 
-	return userInput;
-}
+    ClientInput* userInput = new ClientInput;
+    userInput->clientInput = static_cast<MenuInput>(stoi(firstParam));
+    if (!secondParam.empty()) {
+        userInput->cityInput = static_cast<CityInput>(stoi(secondParam));
+    }
 
-char* emptyString() {
-	char* ret = new char[1];
-	ret[0] = '\0';
-	return ret;
-}
-
-char* invalidInputString() {
-	char* ret = new char[DEFAULT_BUFFER_SIZE];
-	strcpy(ret, "Invalid input");
-	return ret;
+    return userInput;
 }

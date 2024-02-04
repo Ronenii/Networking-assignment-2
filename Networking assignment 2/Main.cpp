@@ -86,7 +86,7 @@ void main()
 	int client_addr_len = sizeof(client_addr);
 	int bytesSent = 0;
 	int bytesRecv = 0;
-	const char* retMessage = NULL;
+	string retMessage = "";
 	char recvBuff[255];
 
 	// Get client's requests and answer them.
@@ -128,7 +128,7 @@ void main()
 			retMessage = getCurrentTicks();
 			break;
 		case MenuInput::MEASURE_RTT:
-			retMessage = emptyString();
+			retMessage = "";
 			break;
 		case MenuInput::GET_TIME_WITHOUT_DATE_OR_SECONDS:
 			retMessage = getTimeWithoutDateOrSeconds();
@@ -155,16 +155,16 @@ void main()
 			break;
 		case MenuInput::EXIT:
 			runFlag = false;
-			retMessage = emptyString();
+			retMessage = "";
 			break;
 		default:
-			retMessage = invalidInputString();
+			retMessage = "Invalid input";
 			break;
 		}
 		delete input;
 		// Sends the answer to the client, using the client address gathered
 	    // by recvfrom. 
-		bytesSent = sendto(m_socket, retMessage, strlen(retMessage) + 1, 0, (const sockaddr*)&client_addr, client_addr_len);
+		bytesSent = sendto(m_socket, retMessage.c_str(), retMessage.size() + 1, 0, (const sockaddr*)&client_addr, client_addr_len);
 		if (SOCKET_ERROR == bytesSent)
 		{
 			cout << "Time Server: Error at sendto(): " << WSAGetLastError() << endl;
@@ -173,8 +173,7 @@ void main()
 			return;
 		}
 
-		cout << "Time Server: Sent: " << bytesSent << "\\" << strlen(retMessage) << " bytes of \"" << retMessage << "\" message.\n";
-		delete retMessage;
+		cout << "Time Server: Sent: " << bytesSent << "\\" << retMessage.size() + 1 << " bytes of \"" << retMessage << "\" message.\n";
 	}
 
 	// Closing connections and Winsock.

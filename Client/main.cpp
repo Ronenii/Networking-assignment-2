@@ -46,6 +46,7 @@ void main()
 		switch (input) {
 		case MenuInput::EXIT:
 			runFlag = false;
+			sendMessageAndRecieveResult(connSocket, server, reqeustValue);
 			break;
 		case MenuInput::GET_CLIENT_TO_SERVER_DELAY_ESTIMATION:
 			getClientToServerDelayEstimation(connSocket, server);
@@ -56,6 +57,9 @@ void main()
 		case MenuInput::GET_TIME_WITHOUT_DATE_IN_CITY:
 			printCitiesMenu();
 			getTimeInCity(connSocket, server);
+			break;
+		case MenuInput::INPUT_ERROR:
+			cout << "invalid input!" << endl;
 			break;
 		default:
 			sendMessageAndRecieveResult(connSocket, server, reqeustValue);

@@ -5,6 +5,7 @@
 #pragma comment(lib, "Ws2_32.lib")
 #include <winsock2.h>
 #include <string.h>
+#include <string>
 #include <time.h>
 #include <sysinfoapi.h>
 
@@ -31,45 +32,27 @@ enum class MenuInput {
 };
 
 enum class CityInput {
-	DOHA = 1,
+	DOHA,
 	PRAGUE,
 	NEW_YORK,
 	BERLIN
 };
 
-typedef struct clientInput {
+struct ClientInput {
 	MenuInput clientInput;
 	CityInput cityInput;
+};
 
-}ClientInput;
-
-
-char * getTime();
-
-char* getTimeWithoutDate();
-
-char* getTimeWithoutDateOrSeconds();
-
-char* getYear();
-
-char* getTimeSinceEpoch();
-
-char* getMonthAndDay();
-
-char* getCurrentTicks();
-
-char* getSecondsSinceBeginningOfTheMonth();
-
-char* getWeekOfYear();
-
-char* getDaylightSavings();
-
+string getTime();
+string getTimeWithoutDate();
+string getTimeWithoutDateOrSeconds();
+string getYear();
+string getTimeSinceEpoch();
+string getMonthAndDay();
+string getCurrentTicks();
+string getSecondsSinceBeginningOfTheMonth();
+string getWeekOfYear();
+string getDaylightSavings();
 void setTimeZone(const char* timeZone);
-
-char* getTimeInCity(CityInput city);
-
-ClientInput* parseInput(char* input);
-
-char* emptyString();
-
-char* invalidInputString();
+string getTimeInCity(CityInput city);
+ClientInput* parseInput(string input);

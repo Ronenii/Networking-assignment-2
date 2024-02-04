@@ -148,8 +148,11 @@ MenuInput parseInput() {
 
 	cin >> intInput;
 	cout << endl;
-
-	return static_cast<MenuInput>(intInput);
+	
+	if (intInput < static_cast<int>(MenuInput::INPUT_ERROR))
+		return static_cast<MenuInput>(intInput);
+	else
+		return MenuInput::INPUT_ERROR;
 }
 
 void printMenu() {

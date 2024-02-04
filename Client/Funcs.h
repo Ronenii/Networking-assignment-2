@@ -28,6 +28,7 @@ enum class MenuInput {
 	GET_DAYLIGHT_SAVINGS,
 	GET_TIME_WITHOUT_DATE_IN_CITY,
 	MEASURE_TIME_LAP,
+	INPUT_ERROR,
 };
 
 void sendMessageAndRecieveResult(SOCKET& connSocket, sockaddr_in& server, char* message);
