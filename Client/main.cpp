@@ -35,18 +35,17 @@ void main()
 	server.sin_addr.s_addr = inet_addr("127.0.0.1");
 	server.sin_port = htons(TIME_PORT);
 
-	char reqeustValue[MAX_INPUT_LENGTH];
 	while (runFlag) {
 		printMenu();
 		cout << "==> " << flush;
 		MenuInput input = parseInput();
-		int cityInput;
-		snprintf(reqeustValue, MAX_INPUT_LENGTH, "%d", static_cast<int>(input));
+
+		string requestValue = to_string(static_cast<int>(input));
 
 		switch (input) {
 		case MenuInput::EXIT:
 			runFlag = false;
-			sendMessageAndRecieveResult(connSocket, server, reqeustValue);
+			sendMessageAndRecieveResult(connSocket, server, requestValue);
 			break;
 		case MenuInput::GET_CLIENT_TO_SERVER_DELAY_ESTIMATION:
 			getClientToServerDelayEstimation(connSocket, server);
@@ -62,7 +61,7 @@ void main()
 			cout << "invalid input!" << endl;
 			break;
 		default:
-			sendMessageAndRecieveResult(connSocket, server, reqeustValue);
+			sendMessageAndRecieveResult(connSocket, server, requestValue);
 			break;
 		}
 	}

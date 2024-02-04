@@ -1,82 +1,66 @@
 #include "Funcs.h"
 
-void sendMessageAndRecieveResult(SOCKET& connSocket, sockaddr_in& server, char* message) {
+void sendMessageAndRecieveResult(SOCKET& connSocket, sockaddr_in& server, const string& message) {
 	int bytesSent = 0;
 	int bytesRecv = 0;
 	char recvBuff[DEFAULT_BUFFER_SIZE];
 
-	// Asks the server what's the currnet time.
-	// The send function sends data on a connected socket.
-	// The buffer to be sent and its size are needed.
-	// The fourth argument is an idicator specifying the way in which the call is made (0 for default).
-	// The two last arguments hold the details of the server to communicate with. 
-	// NOTE: the last argument should always be the actual size of the client's data-structure (i.e. sizeof(sockaddr)).
-	bytesSent = sendto(connSocket, message, (int)strlen(message), 0, (const sockaddr*)&server, sizeof(server));
+	bytesSent = sendto(connSocket, message.c_str(), static_cast<int>(message.length()), 0, reinterpret_cast<const sockaddr*>(&server), sizeof(server));
 	cout << "**************************************************************" << endl;
-	if (SOCKET_ERROR == bytesSent)
-	{
+
+	if (SOCKET_ERROR == bytesSent) {
 		cout << "Time Client: Error at sendto(): " << WSAGetLastError() << endl;
 		closesocket(connSocket);
 		WSACleanup();
 		return;
 	}
-	cout << "Time Client: Sent: " << bytesSent << "/" << strlen(message) << " bytes of \"" << message << "\" message.\n";
 
-	// Gets the server's answer using simple recieve (no need to hold the server's address).
+	cout << "Time Client: Sent: " << bytesSent << "/" << message.length() << " bytes of \"" << message << "\" message.\n";
+
 	bytesRecv = recv(connSocket, recvBuff, DEFAULT_BUFFER_SIZE, 0);
-	if (SOCKET_ERROR == bytesRecv)
-	{
+	if (SOCKET_ERROR == bytesRecv) {
 		cout << "Time Client: Error at recv(): " << WSAGetLastError() << endl;
 		closesocket(connSocket);
 		WSACleanup();
 		return;
 	}
 
-	recvBuff[bytesRecv] = '\0'; //add the null-terminating to make it a string
-	cout << "Time Client: Recieved: " << bytesRecv << " bytes of \"" << recvBuff << "\" message.\n";
+	recvBuff[bytesRecv] = '\0'; // add the null-terminating to make it a string
+	cout << "Time Client: Received: " << bytesRecv << " bytes of \"" << recvBuff << "\" message.\n";
 	cout << "**************************************************************" << endl << endl;
 }
 
-void sendMessageNoOutput(SOCKET& connSocket, sockaddr_in& server, const char* message) {
+void sendMessageNoOutput(SOCKET& connSocket, sockaddr_in& server, const string& message) {
 	int bytesSent = 0;
 
-	// Asks the server what's the currnet time.
-	// The send function sends data on a connected socket.
-	// The buffer to be sent and its size are needed.
-	// The fourth argument is an idicator specifying the way in which the call is made (0 for default).
-	// The two last arguments hold the details of the server to communicate with. 
-	// NOTE: the last argument should always be the actual size of the client's data-structure (i.e. sizeof(sockaddr)).
-	bytesSent = sendto(connSocket, message, (int)strlen(message), 0, (const sockaddr*)&server, sizeof(server));
+	bytesSent = sendto(connSocket, message.c_str(), static_cast<int>(message.length()), 0, reinterpret_cast<const sockaddr*>(&server), sizeof(server));
 
-	if (SOCKET_ERROR == bytesSent)
-	{
+	if (SOCKET_ERROR == bytesSent) {
 		closesocket(connSocket);
 		WSACleanup();
 		return;
 	}
 }
 
-char* getResultNoOutput(SOCKET& connSocket) {
+string getResultNoOutput(SOCKET& connSocket) {
 	int bytesRecv = 0;
-	char* recvBuff = new char[DEFAULT_BUFFER_SIZE];
-	// Gets the server's answer using simple recieve (no need to hold the server's address).
+	char recvBuff[DEFAULT_BUFFER_SIZE];
+	// Gets the server's answer using simple receive (no need to hold the server's address).
 	bytesRecv = recv(connSocket, recvBuff, DEFAULT_BUFFER_SIZE, 0);
-	if (SOCKET_ERROR == bytesRecv)
-	{
+	if (SOCKET_ERROR == bytesRecv) {
 		closesocket(connSocket);
 		WSACleanup();
-		return NULL;
+		return "";
 	}
 
-	recvBuff[bytesRecv] = '\0'; //add the null-terminating to make it a string
-	return recvBuff;
+	recvBuff[bytesRecv] = '\0'; // add the null-terminating to make it a string
+	return string(recvBuff);
 }
 
 void getClientToServerDelayEstimation(SOCKET& connSocket, sockaddr_in& server) {
-
 	int sumOfDifferences = 0;
-	int recievedTicks = NULL;
-	int prevTicks;
+	int receivedTicks = 0;
+	int prevTicks = 0;
 
 	for (int i = 0; i < 100; i++) {
 		sendMessageNoOutput(connSocket, server, "4");
@@ -84,12 +68,12 @@ void getClientToServerDelayEstimation(SOCKET& connSocket, sockaddr_in& server) {
 
 	for (int i = 0; i < 100; i++) {
 		if (i > 0) {
-			prevTicks = recievedTicks;
+			prevTicks = receivedTicks;
 		}
 
-		char* result = getResultNoOutput(connSocket);
-		recievedTicks = atoi(result);
-		if (recievedTicks == NULL) {
+		string result = getResultNoOutput(connSocket);
+		receivedTicks = stoi(result);
+		if (receivedTicks == 0) {
 			cout << "Time Client: Error at getResultNoOutput(): " << WSAGetLastError() << endl;
 			closesocket(connSocket);
 			WSACleanup();
@@ -97,10 +81,8 @@ void getClientToServerDelayEstimation(SOCKET& connSocket, sockaddr_in& server) {
 		}
 
 		if (i > 0) {
-			sumOfDifferences += (recievedTicks - prevTicks);
+			sumOfDifferences += (receivedTicks - prevTicks);
 		}
-
-		delete result;
 	}
 
 	cout << "**************************************************************" << endl;
@@ -110,9 +92,9 @@ void getClientToServerDelayEstimation(SOCKET& connSocket, sockaddr_in& server) {
 
 void measureRTT(SOCKET& connSocket, sockaddr_in& server) {
 	int ticksBeforeSending;
-	time_t ticksAfterReceiving;
+	int ticksAfterReceiving;
 	int sumOfRTTs = 0;
-	char* result;
+	string result;
 
 	for (int i = 0; i < 100; i++) {
 		ticksBeforeSending = GetTickCount();
@@ -120,10 +102,8 @@ void measureRTT(SOCKET& connSocket, sockaddr_in& server) {
 		result = getResultNoOutput(connSocket);
 		ticksAfterReceiving = GetTickCount();
 		sumOfRTTs += ticksAfterReceiving - ticksBeforeSending;
-
-		delete result;
 	}
-	
+
 	cout << "**************************************************************" << endl;
 	cout << "Client to server RTT Measurement: " << (((float)sumOfRTTs / 100.0f) / 10000.0f) << "ms" << endl;
 	cout << "**************************************************************" << endl << endl;
@@ -135,25 +115,21 @@ void getTimeInCity(SOCKET& connSocket, sockaddr_in& server) {
 	cin >> input;
 	cout << endl;
 
-	char* message = new char[DEFAULT_BUFFER_SIZE];
-
-	sprintf(message, "%d %d", 12, input);
+	string message = to_string(12) + " " + to_string(input);
 	sendMessageAndRecieveResult(connSocket, server, message);
-
-	delete message;
 }
 
 MenuInput parseInput() {
 	int intInput;
-
 	cin >> intInput;
 	cout << endl;
-	
+
 	if (intInput < static_cast<int>(MenuInput::INPUT_ERROR))
 		return static_cast<MenuInput>(intInput);
 	else
 		return MenuInput::INPUT_ERROR;
 }
+
 
 void printMenu() {
 	cout << "1.  Get time" << endl;

@@ -11,6 +11,7 @@ using namespace std;
 #include <winsock2.h> 
 #include <string.h>
 #include <time.h>
+#include <string>
 #include <sysinfoapi.h>
 
 enum class MenuInput {
@@ -31,20 +32,21 @@ enum class MenuInput {
 	INPUT_ERROR,
 };
 
-void sendMessageAndRecieveResult(SOCKET& connSocket, sockaddr_in& server, char* message);
 
-void sendMessageNoOutput(SOCKET& connSocket, sockaddr_in& server, char* message);
+void sendMessageAndRecieveResult(SOCKET& connSocket, sockaddr_in& server, const string& message);
 
-char * getResultNoOutput(SOCKET& connSocket);
+void sendMessageNoOutput(SOCKET& connSocket, sockaddr_in& server, const string& message);
+
+string getResultNoOutput(SOCKET& connSocket);
 
 void getClientToServerDelayEstimation(SOCKET& connSocket, sockaddr_in& server);
 
 void measureRTT(SOCKET& connSocket, sockaddr_in& server);
+
+void getTimeInCity(SOCKET& connSocket, sockaddr_in& server);
 
 MenuInput parseInput();
 
 void printMenu();
 
 void printCitiesMenu();
-
-void getTimeInCity(SOCKET& connSocket, sockaddr_in& server);
