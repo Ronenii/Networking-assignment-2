@@ -30,7 +30,7 @@ char* getTimeWithoutDateOrSeconds() {
 
 	char* ret = new char[DEFAULT_BUFFER_SIZE];
 
-	strftime(ret,strlen(ret), "%H:%M", localtime(&timer));
+	strftime(ret, strlen(ret), "%H:%M", localtime(&timer));
 
 	return ret;
 }
@@ -47,14 +47,14 @@ char* getYear() {
 }
 
 char* getTimeSinceEpoch() {
-    time_t timer;
-    time(&timer);
+	time_t timer;
+	time(&timer);
 
 	char* ret = new char[DEFAULT_BUFFER_SIZE];
 
 	itoa(timer, ret, BASE_10);
 
-    return ret;
+	return ret;
 }
 
 char* getMonthAndDay() {
@@ -64,7 +64,7 @@ char* getMonthAndDay() {
 	char* ret = new char[DEFAULT_BUFFER_SIZE];
 	int day = localtime(&timer)->tm_mday;
 	int month = localtime(&timer)->tm_mon + 1;
-	
+
 	sprintf(ret, "%d/%d", day, month);
 
 	return ret;
@@ -78,7 +78,7 @@ char* getCurrentTicks() {
 
 char* getSecondsSinceBeginningOfTheMonth() {
 	char* ret = new char[DEFAULT_BUFFER_SIZE];
-	
+
 	time_t now;
 	time(&now);
 
@@ -111,16 +111,16 @@ char* getDaylightSavings() {
 	time(&timer);
 	struct tm* tm_info = localtime(&timer);
 
-	char * ret = new char[DEFAULT_BUFFER_SIZE];
+	char* ret = new char[DEFAULT_BUFFER_SIZE];
 
 	if (tm_info->tm_isdst > 0) {
-		strcpy(ret,"Daylight Saving Time is in effect.\n");
+		strcpy(ret, "Daylight Saving Time is in effect.\n");
 	}
 	else if (tm_info->tm_isdst == 0) {
-		strcpy(ret,"Daylight Saving Time is not in effect.\n");
+		strcpy(ret, "Daylight Saving Time is not in effect.\n");
 	}
 	else {
-		strcpy(ret,"Daylight Saving Time information is not available.\n");
+		strcpy(ret, "Daylight Saving Time information is not available.\n");
 	}
 
 	return ret;
@@ -133,44 +133,40 @@ void setTimeZone(const char* timeZone) {
 }
 
 char* getTimeInCity(CityInput city) {
-	const char* timeZone;
-	time_t currentTime;
-	time(&currentTime);
+	time_t utcTime;
+	time(&utcTime);
+
+	const int secondsInHour = 3600;
+	int hourOffset = 0;
 
 	switch (city) {
 	case CityInput::DOHA:
-		timeZone = "Asia/Qatar";
+		hourOffset = 3;
 		break;
 	case CityInput::PRAGUE:
-		timeZone = "Europe/Prague";
+		hourOffset = 1;
 		break;
 	case CityInput::NEW_YORK:
-		timeZone = "America/New_York";
+		hourOffset = -5;
 		break;
 	case CityInput::BERLIN:
-		timeZone = "Europe/Berlin";
-		break;
-	default:
-		timeZone = "UTC";
+		hourOffset = 1;
 		break;
 	}
 
-	struct tm localTime = *localtime(&currentTime);
-	setTimeZone(timeZone);
-	localtime_r(&currentTime, &localTime);
-
+	utcTime += hourOffset * secondsInHour;
+	struct tm* timeInfo = gmtime(&utcTime);
 
 	char* ret = new char[DEFAULT_BUFFER_SIZE];
+	strftime(ret, DEFAULT_BUFFER_SIZE, "%H:%M:%S", timeInfo);
 
-	strftime(ret, strlen(ret), "%H:%M:%S", &localTime);
-
-	return ret;
+	return ret; // Return formatted time string
 }
 
-ClientInput * parseInput(char* input) {
-	char * firstParam = strtok(input, " ");
-	char * secondParam = strtok(NULL, " ");
-	ClientInput * userInput = new ClientInput;
+ClientInput* parseInput(char* input) {
+	char* firstParam = strtok(input, " ");
+	char* secondParam = strtok(NULL, " ");
+	ClientInput* userInput = new ClientInput;
 	userInput->clientInput = static_cast<MenuInput>(atoi(firstParam));
 	if (secondParam != nullptr) {
 		userInput->cityInput = static_cast<CityInput>(atoi(secondParam));

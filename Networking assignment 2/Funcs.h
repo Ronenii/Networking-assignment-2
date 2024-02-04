@@ -2,12 +2,13 @@
 #define _CRT_NONSTDC_NO_DEPRECATE
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
-using namespace std;
 #pragma comment(lib, "Ws2_32.lib")
 #include <winsock2.h>
 #include <string.h>
 #include <time.h>
 #include <sysinfoapi.h>
+
+using namespace std;
 
 # define DEFAULT_BUFFER_SIZE 255
 # define BASE_10 10
