@@ -56,3 +56,4 @@ string getDaylightSavings();
 void setTimeZone(const char* timeZone);
 string getTimeInCity(CityInput city);
 ClientInput* parseInput(string input);
+string measureTimeLap();

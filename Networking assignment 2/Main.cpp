@@ -152,6 +152,7 @@ void main()
 			retMessage = getTimeInCity(input->cityInput);
 			break;
 		case MenuInput::MEASURE_TIME_LAP:
+			retMessage = measureTimeLap();
 			break;
 		case MenuInput::EXIT:
 			runFlag = false;
