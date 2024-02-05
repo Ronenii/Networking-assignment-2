@@ -38,7 +38,6 @@ void sendMessageNoOutput(SOCKET& connSocket, sockaddr_in& server, const string& 
 	if (SOCKET_ERROR == bytesSent) {
 		closesocket(connSocket);
 		WSACleanup();
-		return;
 	}
 }
 
@@ -94,12 +93,11 @@ void measureRTT(SOCKET& connSocket, sockaddr_in& server) {
 	int ticksBeforeSending;
 	int ticksAfterReceiving;
 	int sumOfRTTs = 0;
-	string result;
 
 	for (int i = 0; i < 100; i++) {
 		ticksBeforeSending = GetTickCount();
 		sendMessageNoOutput(connSocket, server, "5");
-		result = getResultNoOutput(connSocket);
+		getResultNoOutput(connSocket);
 		ticksAfterReceiving = GetTickCount();
 		sumOfRTTs += ticksAfterReceiving - ticksBeforeSending;
 	}
@@ -115,7 +113,7 @@ void getTimeInCity(SOCKET& connSocket, sockaddr_in& server) {
 	cin >> input;
 	cout << endl;
 
-	string message = to_string(12) + " " + to_string(input);
+	const string message = to_string(12) + " " + to_string(input);
 	sendMessageAndRecieveResult(connSocket, server, message);
 }
 
@@ -124,10 +122,9 @@ MenuInput parseInput() {
 	cin >> intInput;
 	cout << endl;
 
-	if (intInput < static_cast<int>(MenuInput::INPUT_ERROR))
-		return static_cast<MenuInput>(intInput);
-	else
+	if (intInput >= static_cast<int>(MenuInput::INPUT_ERROR))
 		return MenuInput::INPUT_ERROR;
+	return static_cast<MenuInput>(intInput);
 }
 
 
@@ -140,7 +137,7 @@ void printMenu() {
 	cout << "6.  Get time without date or seconds" << endl;
 	cout << "7.  Get year" << endl;
 	cout << "8.  Get month and day" << endl;
-	cout << "9.  Get seconds since begining of month" << endl;
+	cout << "9.  Get seconds since beginning of month" << endl;
 	cout << "10. Get week of year" << endl;
 	cout << "11. Get day light savings" << endl;
 	cout << "12. Get time without date in city" << endl;
