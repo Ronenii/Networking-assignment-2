@@ -1,4 +1,4 @@
-#include "Funcs.h"
+#include "ServerFuncs.h"
 
 string getTime() {
 	// Get the current time.

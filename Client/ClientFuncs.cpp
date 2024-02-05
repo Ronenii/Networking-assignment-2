@@ -1,4 +1,4 @@
-#include "Funcs.h"
+#include "ClientFuncs.h"
 
 void sendMessageAndRecieveResult(SOCKET& connSocket, sockaddr_in& server, const string& message) {
 	int bytesSent = 0;

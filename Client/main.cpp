@@ -1,4 +1,4 @@
-#include "Funcs.h"
+#include "ClientFuncs.h"
 
 #define TIME_PORT	27015
 
